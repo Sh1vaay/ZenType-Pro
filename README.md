@@ -110,34 +110,6 @@ Follow these steps to get a local copy up and running.
 
 ---
 
-## 📂 Project Structure
-
-A clean "Source-First" architecture is used to separate concerns.
-
-```tree
-/
-├── public/                  # Static assets (images, sounds, favicons)
-├── src/
-│   ├── components/          # Reusable React components
-│   │   ├── TypingArea.tsx       # Core game loop & input capture
-│   │   ├── VirtualKeyboard.tsx  # Visual keyboard & heatmap renderer
-│   │   ├── AnalyticsDashboard.tsx # Stats & graphs container
-│   │   └── ...
-│   ├── services/            # Pure logic & helper functions
-│   │   └── soundEngine.ts       # Audio context & asset management
-│   ├── App.tsx              # Main application controller & state holder
-│   ├── constants.tsx        # Static data (Level text, quotes)
-│   ├── types.ts             # TypeScript interfaces (The DNA of the app)
-│   ├── index.tsx            # Application entry point
-│   └── index.css            # Global styles & Tailwind directives
-├── index.html               # HTML entry point
-├── package.json             # Dependencies & scripts
-├── tsconfig.json            # TypeScript configuration
-└── vite.config.ts           # Vite build configuration
-```
-
----
-
 ## 🧠 Core Concepts
 
 ### The "Game Loop"
@@ -155,15 +127,6 @@ The app uses a `localStorage` sync pattern.
 -   **Load**: On mount, `App.tsx` hydrates state from `localStorage`.
 -   **Save**: `useEffect` hooks listen for changes in `userStats` and write back to storage.
 -   **Benefit**: Users can refresh or close the tab without losing their Level, XP, or History.
-
----
-
-## 🔮 Roadmap
-
--   [ ] **Multiplayer Race Mode**: WebSocket implementation for 1v1 battles.
--   [ ] **Cloud Sync**: Firebase integration for cross-device progress.
--   [ ] **Custom Lessons**: Drag-and-drop support for `.txt` or `.md` files.
--   [ ] **Accessibility**: Enhanced screen reader support and WCAG 2.1 compliance.
 
 ---
 

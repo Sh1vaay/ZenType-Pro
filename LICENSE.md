@@ -1,4 +1,4 @@
-# Copyright © 2026 Your Name. All Rights Reserved.
+# Copyright © 2026 . All Rights Reserved.
 
 ## Strict Proprietary License
 

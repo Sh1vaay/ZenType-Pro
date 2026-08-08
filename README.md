@@ -35,7 +35,7 @@
 - **Build & Optimization**: Vite 6, Rollup
 - **Styling & UI**: Tailwind CSS, Framer Motion, Lucide React
 - **Testing**: Vitest, React Testing Library
-- **Deployment**: Configured for static hosting (e.g. Netlify, GitHub Pages, Vercel)
+- **Deployment**: Configured for static hosting (e.g. Netlify, GitHub Pages)
 
 ### System Architecture Diagram
 
@@ -112,7 +112,7 @@ sequenceDiagram
 ### Security Considerations
 - **Data Privacy**: No PII is collected. Everything lives in the browser.
 - **XSS Prevention**: React automatically escapes user input.
-- **CSP & Headers**: Configuration (`vercel.json`) enforces strict `Content-Security-Policy`, `Strict-Transport-Security`, and `X-Frame-Options` headers to prevent clickjacking and malicious script execution.
+- **CSP & Headers**: Ensure your hosting provider is configured to enforce strict `Content-Security-Policy`, `Strict-Transport-Security`, and `X-Frame-Options` headers to prevent clickjacking and malicious script execution.
 - **Dependencies**: Continuously audited. Current known vulnerabilities: **0**.
 
 ### Performance Optimizations
@@ -148,11 +148,6 @@ ZenType uses Vitest for rapid unit testing.
 npm run test
 ```
 
-### Deployment Guide
-This project is configured out-of-the-box for static hosting platforms.
-Simply push the code to your GitHub repository and import it into your hosting provider. The included `vercel.json` file will automatically configure the correct build commands and security headers if you choose Vercel.
-
----
 
 ## 🤝 Contributing Guidelines
 

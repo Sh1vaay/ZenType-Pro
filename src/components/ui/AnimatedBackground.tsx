@@ -65,7 +65,7 @@ const AnimatedBackground: React.FC = () => {
             />
 
             {/* Grid Overlay for texture */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-150 contrast-150 mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 opacity-20 pointer-events-none" />
         </div>
     );
 };

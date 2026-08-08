@@ -22,6 +22,8 @@ interface TypingAreaProps {
     time: number;
     keyPerformance: Record<string, KeyPerformance>;
     replay: KeystrokeEvent[];
+    consistency: number;
+    varianceGraph: { time: number; wpm: number }[];
   }) => void;
   onRestart: () => void;
 }

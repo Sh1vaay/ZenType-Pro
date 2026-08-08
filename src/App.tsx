@@ -133,7 +133,18 @@ const App: React.FC = () => {
     setKeystrokeHistory([]);
   }, [currentMode, currentLevelIndex]);
 
-  const handleLevelComplete = useCallback((stats: any) => {
+  const handleLevelComplete = useCallback((stats: {
+    wpm: number;
+    rawWpm: number;
+    netWpm: number;
+    accuracy: number;
+    mistakes: number;
+    time: number;
+    keyPerformance: Record<string, KeyPerformance>;
+    replay: KeystrokeEvent[];
+    consistency: number;
+    varianceGraph: { time: number; wpm: number }[];
+  }) => {
     setIsActive(false);
 
     const result: TypingResult = {
@@ -385,11 +396,15 @@ const App: React.FC = () => {
 
       {showShop ? (
         <Shop
-          onClose={() => setShowShop(false)}
-          currency={userStats.currency || 0}
-          onPurchase={(id, cost) => {
-            setUserStats(prev => ({ ...prev, currency: (prev.currency || 0) - cost }));
+          stats={userStats}
+          onBuy={(item) => {
+            setUserStats(prev => ({
+              ...prev,
+              currency: Math.max(0, (prev.currency || 0) - item.cost),
+              inventory: [...(prev.inventory || []), { itemId: item.id, acquiredAt: Date.now() }]
+            }));
           }}
+          onClose={() => setShowShop(false)}
         />
       ) : null}
 

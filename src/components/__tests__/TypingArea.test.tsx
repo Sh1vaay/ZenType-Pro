@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import TypingArea from '../TypingArea';
+import TypingArea from '../typing/TypingArea';
 import { StageType, SessionSettings, TestMode } from '../../types';
 
 // Mock sound engine

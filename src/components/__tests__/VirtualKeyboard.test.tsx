@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import VirtualKeyboard from '../VirtualKeyboard';
+import VirtualKeyboard from '../typing/VirtualKeyboard';
 import { StageType } from '../../types';
 import '@testing-library/jest-dom';
 

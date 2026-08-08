@@ -84,15 +84,29 @@ const loadSettings = (): SessionSettings => {
   };
 };
 
+const ASCII_ART = [
+  "  /\\_/\\\n ( o.o )\n  > ^ <\n ASCII CAT",
+  "   ____\n  |    |\n  |____|\n  |    |\n  |____|",
+  "  \\o/\n   |\n  / \\"
+];
+
+const generateRandomWords = (count: number) => {
+  const words = LEVEL_CONTENT[StageType.BASIC_WORDS].join(' ').split(' ');
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    result.push(words[Math.floor(Math.random() * words.length)]);
+  }
+  return result.join(' ');
+};
+
 const App: React.FC = () => {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [currentMode, setCurrentMode] = useState<TestMode>('CLASSIC'); // Use TestMode string literals
-  const [userInput, setUserInput] = useState('');
   const [sessionId, setSessionId] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [userStats, setUserStats] = useState<UserStats>(loadStats());
+  const [userStats, setUserStats] = useState<UserStats>(() => loadStats());
   const [showStats, setShowStats] = useState(false);
-  const [settings, setSettings] = useState<SessionSettings>(loadSettings());
+  const [settings, setSettings] = useState<SessionSettings>(() => loadSettings());
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [sessionText, setSessionText] = useState('');
@@ -122,7 +136,6 @@ const App: React.FC = () => {
   const [accuracy, setAccuracy] = useState(100);
   const [wordsTyped, setWordsTyped] = useState(0);
   const [keystrokeHistory, setKeystrokeHistory] = useState<KeystrokeEvent[]>([]);
-  const [heatmapData, setHeatmapData] = useState<KeyPerformance[]>([]);
   const [lastResult, setLastResult] = useState<TypingResult | null>(null);
 
   useEffect(() => {
@@ -162,16 +175,19 @@ const App: React.FC = () => {
     } else if (currentMode === 'QUOTE') {
       const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
       content = randomQuote;
-    } else if (currentMode === 'CODE') {
+    } else if (currentMode === 'CODE' || currentMode === 'TERMINAL') {
       const randomSnippet = CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)];
       content = randomSnippet;
+    } else if (currentMode === 'WORD') {
+      content = generateRandomWords(settings.wordCount);
+    } else if (currentMode === 'ASCII') {
+      content = ASCII_ART[Math.floor(Math.random() * ASCII_ART.length)];
     } else {
-      // Default fallback
-      content = "The quick brown fox jumps over the lazy dog. ".repeat(10);
+      // Default fallback for TIME, ZEN, BLIND, MIRROR, UPSIDE_DOWN, READ_AHEAD, SUDDEN_DEATH
+      content = generateRandomWords(200);
     }
     setSessionText(content);
     // Reset state when content changes
-    setUserInput('');
     setSessionId(prev => prev + 1);
     setStartTime(null);
     setIsActive(false);
@@ -379,22 +395,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mt-8"
-              >
-                <VirtualKeyboard
-                  stage={currentMode === 'CLASSIC' ? (LEVELS[currentLevelIndex]?.stage || StageType.SINGLE_LETTER) : StageType.CUSTOM_MODE}
-                  targetKey={sessionText[userInput.length]}
-                  layout={settings.layout}
-                  heatmapData={heatmapData}
-                  showHandGuide={settings.showHandGuide}
-                  theme={settings.keyboardTheme}
-                />
-              </motion.div>
-
             </motion.div>
           ) : (
             <motion.div
@@ -438,16 +438,16 @@ const App: React.FC = () => {
         </AnimatePresence>
       </main>
 
-      {showCommandPalette && (
+      {showCommandPalette ? (
         <CommandPalette
           onClose={() => setShowCommandPalette(false)}
           isOpen={showCommandPalette}
           settings={settings}
           onUpdateSettings={(newS) => setSettings(s => ({ ...s, ...newS }))}
         />
-      )}
+      ) : null}
 
-      {showShop && (
+      {showShop ? (
         <Shop
           onClose={() => setShowShop(false)}
           currency={userStats.currency || 0}
@@ -455,15 +455,15 @@ const App: React.FC = () => {
             setUserStats(prev => ({ ...prev, currency: (prev.currency || 0) - cost }));
           }}
         />
-      )}
+      ) : null}
 
-      {showReplay && lastResult && (
+      {showReplay && lastResult ? (
         <ReplayViewer
           text={sessionText}
           replay={lastResult.replay || []}
           onClose={() => setShowReplay(false)}
         />
-      )}
+      ) : null}
 
       {/* Overlays */}
       <SettingsModal
@@ -473,7 +473,7 @@ const App: React.FC = () => {
         onUpdate={(newS) => setSettings(s => ({ ...s, ...newS }))}
       />
 
-      {showTutorial && <TutorialOverlay onComplete={completeTutorial} />}
+      {showTutorial ? <TutorialOverlay onComplete={completeTutorial} /> : null}
     </div>
   );
 };

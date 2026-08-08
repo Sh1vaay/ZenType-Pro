@@ -67,7 +67,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ wpm, rawWpm, netWpm, accuracy, mi
 
       <button onClick={onWatchReplay} className="w-full mb-8 p-6 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 rounded-[2rem] border border-transparent dark:border-white/10 flex items-center justify-center gap-4 group transition-all" style={{ color: 'var(--text-main)' }}>
         <Eye className="w-6 h-6 group-hover:scale-110 transition-transform" />
-        <span className="text-xi font-black uppercase tracking-widest">Review Keystroke Replay</span>
+        <span className="text-xs font-black uppercase tracking-widest">Review Keystroke Replay</span>
       </button>
 
       <div className="flex flex-col sm:flex-row gap-4">

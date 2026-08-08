@@ -33,9 +33,9 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
   const [startTime, setStartTime] = useState<number | null>(null);
   const [lastKeystrokeTime, setLastKeystrokeTime] = useState<number | null>(null);
   const [isFinished, setIsFinished] = useState(false);
-  const [keyPerformance, setKeyPerformance] = useState<Record<string, KeyPerformance>>({});
+  const keyPerformance = useRef<Record<string, KeyPerformance>>({});
   const [timeLeft, setTimeLeft] = useState<number>(settings.duration);
-  const [recordedEvents, setRecordedEvents] = useState<KeystrokeEvent[]>([]);
+  const recordedEvents = useRef<KeystrokeEvent[]>([]);
   const [ghostIndex, setGhostIndex] = useState(0);
   const [paceGhostIndex, setPaceGhostIndex] = useState(0);
   const [latencyHistory, setLatencyHistory] = useState<number[]>([]);
@@ -93,7 +93,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
     }
   }, [startTime, ghostReplay, ghostIndex, isFinished, settings.ghostWpm, text.length]);
 
-  const calculateStats = useCallback((forceTime?: number) => {
+  const calculateStats = useCallback((forceTime?: number, finalInput?: string) => {
     if (!startTime) return null;
     const endTime = Date.now();
     const durationSeconds = forceTime ?? (endTime - startTime) / 1000;
@@ -101,11 +101,12 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
     if (durationSeconds <= 0) return null;
 
     const timeInMinutes = durationSeconds / 60;
+    const currentInput = finalInput ?? userInput;
 
     let correctChars = 0;
     let mistakes = 0;
-    for (let i = 0; i < userInput.length; i++) {
-      if (userInput[i] === text[i]) {
+    for (let i = 0; i < currentInput.length; i++) {
+      if (currentInput[i] === text[i]) {
         correctChars++;
       } else {
         mistakes++;
@@ -113,14 +114,14 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
     }
 
     // Standard formulas
-    const rawWpm = Math.round((userInput.length / 5) / timeInMinutes) || 0;
+    const rawWpm = Math.round((currentInput.length / 5) / timeInMinutes) || 0;
     // Net WPM
     const penalty = mistakes / timeInMinutes;
     const netWpm = Math.max(0, Math.round(rawWpm - penalty));
 
     // Efficiency WPM
     const wpm = Math.max(0, Math.round((correctChars / 5) / timeInMinutes)) || 0;
-    const accuracy = userInput.length > 0 ? Math.round((correctChars / userInput.length) * 100) : 100;
+    const accuracy = currentInput.length > 0 ? Math.round((correctChars / currentInput.length) * 100) : 100;
 
     const consistency = calculateConsistency(latencyHistory);
 
@@ -131,16 +132,16 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
       accuracy,
       mistakes,
       time: durationSeconds,
-      keyPerformance,
-      replay: recordedEvents,
+      keyPerformance: keyPerformance.current,
+      replay: recordedEvents.current,
       consistency,
       varianceGraph
     };
-  }, [startTime, text, userInput, keyPerformance, recordedEvents, latencyHistory, varianceGraph, calculateConsistency]);
+  }, [startTime, text, userInput, latencyHistory, varianceGraph, calculateConsistency]);
 
-  const finishSession = useCallback((forceTime?: number) => {
+  const finishSession = useCallback((forceTime?: number, finalInput?: string) => {
     if (isFinished) return;
-    const stats = calculateStats(forceTime);
+    const stats = calculateStats(forceTime, finalInput);
     if (stats) {
       setIsFinished(true);
       if (timerRef.current) clearInterval(timerRef.current);
@@ -168,12 +169,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [startTime, settings.mode, timeLeft, isFinished, finishSession, settings.duration]);
 
-  useEffect(() => {
-    // Only finish if session has started (startTime is set) and user has typed the full text
-    if (startTime && userInput.length === text.length && text.length > 0 && !isFinished) {
-      finishSession();
-    }
-  }, [startTime, userInput.length, text.length, isFinished, finishSession]);
+
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -226,7 +222,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
       // Record Event
       if (startTime) {
         const offset = nowWall - startTime;
-        setRecordedEvents(prev => [...prev, { key: actualChar, time: offset, isCorrect, index: charIndex }]);
+        recordedEvents.current.push({ key: actualChar, time: offset, isCorrect, index: charIndex });
 
         // Update Variance Graph every 1s worth of typing (approx) or every 5 chars
         if (nowWall - lastGraphUpdate > 1000) {
@@ -244,21 +240,26 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
           setLatencyHistory(prev => [...prev, latency]);
         }
 
-        setKeyPerformance(prev => {
-          const stats = prev[expectedChar] || { latency: [], mistakes: {}, hits: 0 };
-          if (isCorrect) {
-            stats.latency.push(latency);
-            stats.hits += 1;
-          } else if (actualChar !== undefined) {
-            stats.mistakes[actualChar] = (stats.mistakes[actualChar] || 0) + 1;
-          }
-          return { ...prev, [expectedChar]: { ...stats } };
-        });
+        if (!keyPerformance.current[expectedChar]) {
+          keyPerformance.current[expectedChar] = { latency: [], mistakes: {}, hits: 0 };
+        }
+        const stats = keyPerformance.current[expectedChar];
+        if (isCorrect) {
+          stats.latency.push(latency);
+          stats.hits += 1;
+        } else if (actualChar !== undefined) {
+          stats.mistakes[actualChar] = (stats.mistakes[actualChar] || 0) + 1;
+        }
       }
       setUserInput(val);
       setLastKeystrokeTime(nowPerf);
       // Track recent key times for Heat
       setRecentKeyTimes(prev => [...prev.slice(-9), nowWall]);
+      
+      // rerender-move-effect-to-event: Finish session immediately if typed full text
+      if (val.length === text.length) {
+        finishSession(undefined, val);
+      }
     }
   };
 
@@ -446,7 +447,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ text, stage, settings, isActive
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Mapping Layer</span>
             {isFinished && <div className="text-emerald-500 font-black text-xs animate-pulse uppercase tracking-widest">Capture Finished</div>}
           </div>
-          <VirtualKeyboard stage={stage} targetKey={keymapTarget} layout={settings.layout} theme={settings.keyboardTheme} />
+          <VirtualKeyboard stage={stage} targetKey={keymapTarget} layout={settings.layout} theme={settings.keyboardTheme} showHandGuide={settings.showHandGuide} />
         </div>
       )}
     </div>

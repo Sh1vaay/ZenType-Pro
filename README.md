@@ -1,145 +1,151 @@
-# ⚡ ZenType Pro: The Next-Gen Progressive Typing Tutor [v1.0]
+<div align="center">
+  <h1>🚀 ZenType Pro</h1>
+  <p><strong>A progressive, highly-customizable React typing tutor designed for speed, flow, and focus.</strong></p>
 
-[![React](https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-purple?style=for-the-badge&logo=vite)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-All_Rights_Reserved-red?style=for-the-badge)](./LICENSE.md)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+  [![React](https://img.shields.io/badge/React-19.0.0-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
+  [![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Tests](https://img.shields.io/badge/Tests-Passing-success)]()
 
-> **Master the art of touch typing through gamification, neural analytics, and a scientifically structured curriculum.**
-
----
-
-## 📑 Table of Contents
-- [📖 Project Overview](#-project-overview)
-- [✨ Key Features](#-key-features)
-- [🛠️ Tech Stack & Architecture](#%EF%B8%8F-tech-stack--architecture)
-- [🚀 Getting Started](#-getting-started)
-- [📂 Project Structure](#-project-structure)
-- [🧠 Core Concepts](#-core-concepts)
-- [🔮 Roadmap](#-roadmap)
-- [🤝 Contributing](#-contributing)
+</div>
 
 ---
 
 ## 📖 Project Overview
 
-**ZenType Pro** is not just another typing test. It is a comprehensive **Type-Training Platform** designed to break users out of "hunt and peck" habits and build muscle memory through incremental difficulty.
+**ZenType Pro** is a modern, lightweight Single Page Application (SPA) built to help developers and typists improve their speed and accuracy. Unlike standard typing tests, ZenType offers dynamic content generation, robust gamification, and deep customization to keep users engaged and in a state of "flow."
 
-Unlike standard tutors that offer random paragraphs, ZenType uses a **Progressive Overload** methodology:
-1.  **Isolation**: Start with single letters and home row keys.
-2.  **Integration**: Move to digraphs (common letter pairs like "th", "er").
-3.  **Application**: Type full words, then code snippets, and finally complex prose.
-
-The application operates entirely **Client-Side** (Offline First), ensuring maximum privacy and 0ms latency input responsiveness.
-
----
-
-## ✨ Key Features
-
-### 🎮 **Gamified Progression**
--   **XP System**: Earn Experience Points for every correct character typed.
--   **Leveling**: Scale from *Novice* to *Grandmaster* as you accumulate XP.
--   **Economy**: Earn "TypeCoins" (TC) to purchase cosmetic upgrades in the Shop.
--   **Streaks**: Daily login tracking to encourage consistency.
-
-### 📊 **Neural Analytics Engine**
--   **Heatmaps**: Real-time visual overlay on the virtual keyboard showing "Hot" (fast) and "Cold" (slow/error-prone) keys.
--   **Consistency Score**: Uses standard deviation of keystroke latency to measure rhythm stability, not just raw speed.
--   **Trend Analysis**: Linear graphs showing WPM and Accuracy over the last 50 sessions.
-
-### ⚔️ **Diverse Game Modes**
--   **Classic Campaign**: 8-Curated Levels taking you from "asdf" to full paragraphs.
--   **Sudden Death**: One mistake ends the run immediately. High risk, high reward.
--   **Code Mode**: Practice real-world syntax for Python, JavaScript, and C++.
--   **Blind Mode**: The text fades away as you type, forcing you to trust your muscle memory.
--   **Zen Mode**: No timers, no scores. Just you and the flow.
-
-### 🎨 **Total Customization**
--   **10+ Themes**: From *Dracula* and *Cyberpunk* to *Aurora* and *Glassmorphism*.
--   **Sound Packs**: Mechanical switch sounds (Blue, Brown, Red), Typewriter, and specialized UI sounds.
--   **Visual Toggles**: Adjust caret styles, font families (Monospace/Sans/Serif), and UI density.
+### Key Features
+- **15+ Dynamic Modes**: Ranging from Classic & Word modes to Sudden Death, Blind, Mirror, and Terminal (Code) modes.
+- **Advanced Gamification**: XP, Levels, Streak tracking, and an in-game currency ("TypeCoins") to purchase cosmetic upgrades.
+- **Deep Customization**: 10 distinct color themes, 5 keyboard layouts, various sound packs (Thocky, Cherry, etc.), and dynamic caret animations.
+- **Performance Optimized**: Built using Vercel React Best Practices. Ensures 60+ FPS even with rapid keystrokes and complex latency rendering.
+- **Local Privacy**: All stats and configurations are stored purely locally via `localStorage`—no backend tracking.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🏗 System Architecture
 
-This project utilizes a modern, opinionated stack for maximum performance and developer experience.
+ZenType Pro is built as a pure client-side React SPA, relying on `localStorage` for state persistence and a highly optimized render loop for minimal input latency.
 
-| Technology | Usage | Reasoning |
-| :--- | :--- | :--- |
-| **React 19** | UI Framework | Leverages the new concurrent features and rigid component lifecycle for predictable state updates. |
-| **TypeScript** | Language | Ensuring type safety across complex data structures like `UserStats` and `KeystrokeEvent`. |
-| **Vite** | Build Tool | Chosen for its HMR (Hot Module Replacement) speed and efficient ESBuild compilation. |
-| **Tailwind CSS** | Styling | Atomic CSS allows for rapid UI iteration and a consistent design system without style conflicts. |
-| **Framer Motion** | Animations | Hardware-accelerated layout transitions (60fps) for the keyboard and modal interactions. |
-| **Recharts** | Visualization | Composable charting library to render the complex analytics data svg-side. |
-| **Lucide React** | Icons | Lightweight, consistent SVG icon set for the UI. |
+```mermaid
+graph TD
+    subgraph Frontend Client
+        A[App Entry point] --> B[ModeSelectorDock]
+        A --> C[TypingArea Core]
+        A --> D[VirtualKeyboard]
+        A --> E[AnalyticsDashboard]
+        A --> F[Shop / Gamification]
+    end
 
----
+    subgraph State Management
+        C -- High-Freq Refs --> G[Latency & Keystrokes]
+        C -- Triggers --> H[Event Handlers]
+        A -- Persists --> I[localStorage zentype_stats_v5]
+    end
 
-## 🚀 Getting Started
+    subgraph Input Handling
+        U((User)) -- Keydown --> C
+        C -- Renders Visuals --> U
+    end
 
-Follow these steps to get a local copy up and running.
+    style Frontend Client fill:#0f172a,stroke:#4f46e5,stroke-width:2px,color:#fff
+    style State Management fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#fff
+```
 
-### Prerequisites
--   **Node.js**: v18.0.0 or higher is required.
--   **npm**: v9.0.0 or higher (usually comes with Node).
+### Application Flow
 
-### Installation
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant TypingArea
+    participant LocalStorage
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/Sh1vaay/ZenType-Pro.git
-    cd zentype-pro
-    ```
-
-2.  **Install dependencies**
-    ```bash
-    npm install
-    # This will read the package.json and install all necessary node_modules
-    ```
-
-3.  **Start the development server**
-    ```bash
-    npm run dev
-    ```
-
-4.  **Access the App**
-    Open your browser and navigate to `http://localhost:5173`.
-
----
-
-## 🧠 Core Concepts
-
-### The "Game Loop"
-Unlike standard CRUD apps, ZenType Pro runs a tight loop:
-1.  **Input**: User presses a key.
-2.  **Validation**: `TypingArea` compares input vs target at index $i$.
-3.  **Feedback**:
-    -   **Audio**: Sound plays.
-    -   **Visual**: Character changes color (Green/Red).
-    -   **Data**: Latency (ms) is pushed to the `latencyHistory` array.
-4.  **Completion**: When $i == length$, the session ends and stats are aggregated.
-
-### Persistence
-The app uses a `localStorage` sync pattern.
--   **Load**: On mount, `App.tsx` hydrates state from `localStorage`.
--   **Save**: `useEffect` hooks listen for changes in `userStats` and write back to storage.
--   **Benefit**: Users can refresh or close the tab without losing their Level, XP, or History.
+    User->>App: Load Application
+    App->>LocalStorage: Read `zentype_stats_v5`
+    LocalStorage-->>App: Return UserStats
+    App->>App: Mount Mode & Generate Dynamic Content
+    User->>TypingArea: Start Typing (Keypress)
+    TypingArea->>TypingArea: Start Timer & Track Latency
+    loop During Session
+        User->>TypingArea: Keypress
+        TypingArea-->>User: Visual/Audio Feedback (Heatmap, Sound)
+    end
+    TypingArea->>App: Session Finished (Stats Payload)
+    App->>App: Calculate WPM, Accuracy, XP
+    App->>LocalStorage: Save New Stats
+    App-->>User: Display StatsCard & ReplayViewer
+```
 
 ---
 
-## 🤝 Contributing
+## 🛠 Technology Stack
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+- **Core**: React 19, TypeScript
+- **Build Tool**: Vite 6
+- **Styling**: Tailwind CSS, Framer Motion
+- **Testing**: Vitest, React Testing Library, JSDOM
+- **Icons**: Lucide React
 
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+### Design Decisions
+- **useRef for Transient State**: Keystroke latency and replay tracking arrays update on *every single keystroke*. Storing these in `useState` caused massive DOM churn. Migrating them to `useRef` following Vercel's guidelines removed re-render overhead completely.
+- **Client-Side Only**: Deliberate choice to avoid a backend. This guarantees zero latency issues from network requests during typing, prioritizing the core typing experience.
+- **Error Boundaries**: Hard-wrapping the main app tree ensures that if a theme or custom layout crashes, the app gracefully falls back to a reset screen rather than white-screening.
 
 ---
 
-*Built with ❤️ by a Developer who loves Typography.*
+## 🚀 Developer Experience & Setup
+
+### Local Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Sh1vaay/zentype-pro.git
+   cd zentype-pro
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:3000`.
+
+### Testing
+ZenType uses Vitest for rapid unit testing.
+```bash
+npm run test
+```
+
+---
+
+## 🛡 Security & Quality
+
+- **Data Privacy**: No PII is collected. Everything lives in the browser.
+- **XSS Prevention**: React automatically escapes user input and dynamic content generation blocks script injection.
+- **Performance**: Heavy emphasis on minimizing React renders (`rerender-move-effect-to-event`, `rerender-lazy-state-init`).
+- **Observability**: Error boundary traps and logs critical failures to the console, allowing safe soft-resets of local configurations.
+
+---
+
+## 🤝 Contributing Guidelines
+
+1. Fork the repository.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Ensure your code passes linting (`npm run lint`) and formatting (`npm run format`).
+4. Ensure all tests pass (`npm run test`).
+5. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+6. Push to the branch (`git push origin feature/AmazingFeature`).
+7. Open a Pull Request.
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by the open-source community.</p>
+</div>

@@ -35,7 +35,7 @@ const Shop: React.FC<ShopProps> = ({ stats, onBuy, onClose }) => {
                     </div>
                     <div className="bg-black/40 px-6 py-3 rounded-full border border-white/10">
                         <span className="text-yellow-500 font-black text-xl flex items-center gap-2">
-                            {stats.typeCoins || 0} <span className="text-xs uppercase tracking-widest text-white/40">Coins</span>
+                            {stats.currency || 0} <span className="text-xs uppercase tracking-widest text-white/40">Coins</span>
                         </span>
                     </div>
                 </header>
@@ -43,7 +43,7 @@ const Shop: React.FC<ShopProps> = ({ stats, onBuy, onClose }) => {
                 <div className="overflow-y-auto p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {SHOP_ITEMS.map(item => {
                         const owned = inventoryIds.includes(item.id);
-                        const canAfford = (stats.typeCoins || 0) >= item.cost;
+                        const canAfford = (stats.currency || 0) >= item.cost;
 
                         return (
                             <div key={item.id} className={`relative p-6 rounded-3xl border-2 flex flex-col gap-4 transition-all group ${owned ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5 bg-white/5 hover:border-indigo-500/50 hover:bg-white/10'}`}>

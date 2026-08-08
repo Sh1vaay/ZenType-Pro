@@ -1,3 +1,28 @@
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+/dist-ssr
+/build
+
+# Vite
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+!.env.example
+
 # Logs
 logs
 *.log
@@ -6,14 +31,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-.env
-.env.*
-!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -25,6 +42,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.swp
+
+# Cache & Build temp files
+.eslintcache
+.stylelintcache
+.prettiercache
+.vite
+.tsbuildinfo
+.npm
+
+# Agent & Brain (Gemini/AI caches)
+.agents
+brain
+
+# OS metadata
+Thumbs.db
+.Spotlight-V100
+.Trashes
 
 # Private Documentation
 IMPLEMENTATION_DETAILS.md

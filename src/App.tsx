@@ -3,8 +3,7 @@ import { LEVELS, LEVEL_CONTENT, QUOTES, CODE_SNIPPETS, ACHIEVEMENTS } from './co
 import { UserStats, SessionSettings, KeyPerformance, StageType, TestMode, Theme, KeyboardThemeVariant, TypingResult, KeystrokeEvent } from './types';
 import TypingArea from './components/typing/TypingArea';
 import StatsCard from './components/stats/StatsCard';
-import VirtualKeyboard from './components/typing/VirtualKeyboard';
-const AnalyticsDashboard = lazy(() => import('./components/stats/AnalyticsDashboard'));
+
 import ReplayViewer from './components/stats/ReplayViewer';
 import CommandPalette from './components/ui/CommandPalette';
 import Metronome from './components/tools/Metronome';
@@ -18,6 +17,8 @@ import { Activity, User, Settings, ShoppingBag, Clock, Keyboard, ArrowLeft, Arro
 import ModeSelectorDock from './components/typing/ModeSelectorDock';
 import { useUserStats } from './hooks/useUserStats';
 import { useSettings } from './hooks/useSettings';
+
+const AnalyticsDashboard = lazy(() => import('./components/stats/AnalyticsDashboard'));
 
 const THEMES: Record<Theme, { bg: string, text: string, card: string, primary: string, caret: string }> = {
   standard: { bg: '#f8fafc', text: '#0f172a', card: '#ffffff', primary: '#4f46e5', caret: '#4f46e5' },

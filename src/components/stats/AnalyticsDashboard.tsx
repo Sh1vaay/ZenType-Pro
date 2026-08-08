@@ -26,11 +26,15 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ stats, onClose 
       if (!session.keyPerformance) return;
       (Object.entries(session.keyPerformance) as [string, KeyPerformance][]).forEach(([key, perf]) => {
         if (!allStats[key]) allStats[key] = { latencies: [], mistakes: {}, totalHits: 0 };
-        allStats[key].latencies.push(...perf.latency);
-        allStats[key].totalHits += perf.hits;
-        (Object.entries(perf.mistakes) as [string, number][]).forEach(([mistake, count]) => {
-          allStats[key].mistakes[mistake] = (allStats[key].mistakes[mistake] || 0) + count;
-        });
+        if (perf.latency) {
+          allStats[key].latencies.push(...perf.latency);
+        }
+        allStats[key].totalHits += perf.hits || 0;
+        if (perf.mistakes) {
+          (Object.entries(perf.mistakes) as [string, number][]).forEach(([mistake, count]) => {
+            allStats[key].mistakes[mistake] = (allStats[key].mistakes[mistake] || 0) + count;
+          });
+        }
       });
     });
 

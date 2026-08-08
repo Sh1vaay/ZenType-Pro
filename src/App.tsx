@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { LEVELS, LEVEL_CONTENT, QUOTES, CODE_SNIPPETS, ACHIEVEMENTS } from './constants';
 import { UserStats, SessionSettings, KeyPerformance, StageType, TestMode, Theme, KeyboardThemeVariant, TypingResult, KeystrokeEvent } from './types';
-import TypingArea from './components/TypingArea';
-import StatsCard from './components/StatsCard';
-import VirtualKeyboard from './components/VirtualKeyboard';
-const AnalyticsDashboard = lazy(() => import('./components/AnalyticsDashboard'));
-import ReplayViewer from './components/ReplayViewer';
-import CommandPalette from './components/CommandPalette';
-import Metronome from './components/Metronome';
-import GamificationHUD from './components/GamificationHUD';
-import Shop from './components/Shop';
-import AnimatedBackground from './components/AnimatedBackground';
-import TutorialOverlay from './components/TutorialOverlay';
-import SettingsModal from './components/SettingsModal';
+import TypingArea from './components/typing/TypingArea';
+import StatsCard from './components/stats/StatsCard';
+import VirtualKeyboard from './components/typing/VirtualKeyboard';
+const AnalyticsDashboard = lazy(() => import('./components/stats/AnalyticsDashboard'));
+import ReplayViewer from './components/stats/ReplayViewer';
+import CommandPalette from './components/ui/CommandPalette';
+import Metronome from './components/tools/Metronome';
+import GamificationHUD from './components/gamification/GamificationHUD';
+import Shop from './components/gamification/Shop';
+import AnimatedBackground from './components/ui/AnimatedBackground';
+import TutorialOverlay from './components/gamification/TutorialOverlay';
+import SettingsModal from './components/ui/SettingsModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Activity, User, Settings, ShoppingBag, Clock, Keyboard, ArrowLeft, ArrowRight, Volume2, VolumeX, Eye, EyeOff } from 'lucide-react';
-import ModeSelectorDock from './components/ModeSelectorDock';
+import ModeSelectorDock from './components/typing/ModeSelectorDock';
+import { useUserStats } from './hooks/useUserStats';
+import { useSettings } from './hooks/useSettings';
 
 const THEMES: Record<Theme, { bg: string, text: string, card: string, primary: string, caret: string }> = {
   standard: { bg: '#f8fafc', text: '#0f172a', card: '#ffffff', primary: '#4f46e5', caret: '#4f46e5' },
@@ -30,59 +32,7 @@ const THEMES: Record<Theme, { bg: string, text: string, card: string, primary: s
   aurora: { bg: '#020617', text: '#f1f5f9', card: 'rgba(255, 255, 255, 0.05)', primary: '#10b981', caret: '#34d399' }
 };
 
-const loadStats = (): UserStats => {
-  try {
-    const saved = localStorage.getItem('zentype_stats_v5');
-    if (saved) return JSON.parse(saved);
-  } catch (e) { }
-  return {
-    totalLevelsCompleted: 0,
-    averageWpm: 0,
-    highestWpm: 0,
-    history: [],
-    personalBests: {},
-    bestReplays: {},
-    achievements: [],
-    streak: { current: 0, max: 0, lastLoginDate: new Date().toISOString().split('T')[0] },
-    advancedPBs: {},
-    experience: 0,
-    level: 1,
-    currency: 0,
-    inventory: [],
-    activeDailyQuests: []
-  };
-};
 
-const loadSettings = (): SessionSettings => {
-  try {
-    const saved = localStorage.getItem('zentype_settings_v5');
-    if (saved) return JSON.parse(saved);
-  } catch (e) { }
-  return {
-    includePunctuation: false,
-    includeNumbers: false,
-    mode: 'CLASSIC',
-    duration: 60,
-    wordCount: 25,
-    caretStyle: 'line',
-    caretAnimation: 'smooth',
-    soundPack: 'thocky',
-    theme: 'dark',
-    keyboardTheme: 'default',
-    layout: 'qwerty',
-    showGhost: true,
-    fontFamily: 'sans',
-    density: 'comfortable',
-    flipColors: false,
-    blurEffect: false,
-    keymapMode: 'reactive',
-    ghostWpm: 60,
-    metronomeBpm: 0,
-    metronomeOn: false,
-    showHandGuide: false,
-    juiceLevel: 'low'
-  };
-};
 
 const ASCII_ART = [
   "  /\\_/\\\n ( o.o )\n  > ^ <\n ASCII CAT",
@@ -104,9 +54,9 @@ const App: React.FC = () => {
   const [currentMode, setCurrentMode] = useState<TestMode>('CLASSIC'); // Use TestMode string literals
   const [sessionId, setSessionId] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [userStats, setUserStats] = useState<UserStats>(() => loadStats());
+  const [userStats, setUserStats] = useUserStats();
   const [showStats, setShowStats] = useState(false);
-  const [settings, setSettings] = useState<SessionSettings>(() => loadSettings());
+  const [settings, setSettings] = useSettings();
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [sessionText, setSessionText] = useState('');
@@ -131,20 +81,8 @@ const App: React.FC = () => {
   // Game state
   const [timeLeft, setTimeLeft] = useState(settings.duration);
   const [isActive, setIsActive] = useState(false);
-  const [mistakes, setMistakes] = useState(0);
-  const [wpm, setWpm] = useState(0);
-  const [accuracy, setAccuracy] = useState(100);
-  const [wordsTyped, setWordsTyped] = useState(0);
   const [keystrokeHistory, setKeystrokeHistory] = useState<KeystrokeEvent[]>([]);
   const [lastResult, setLastResult] = useState<TypingResult | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem('zentype_stats_v5', JSON.stringify(userStats));
-  }, [userStats]);
-
-  useEffect(() => {
-    localStorage.setItem('zentype_settings_v5', JSON.stringify(settings));
-  }, [settings]);
 
   // Timer effect
   useEffect(() => {
@@ -191,9 +129,6 @@ const App: React.FC = () => {
     setSessionId(prev => prev + 1);
     setStartTime(null);
     setIsActive(false);
-    setMistakes(0);
-    setWpm(0);
-    setAccuracy(100);
     setKeystrokeHistory([]);
   }, [currentMode, currentLevelIndex]);
 

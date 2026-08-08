@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShopItem, UserStats } from '../types';
+import { ShopItem, UserStats } from '../../types';
 import { ShoppingBag, Lock, Check } from 'lucide-react';
 
 interface ShopProps {

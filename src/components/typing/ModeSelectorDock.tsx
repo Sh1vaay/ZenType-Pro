@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Clock, FileText, Quote, Code, Timer, Zap, Ghost, Monitor, Grid } from 'lucide-react';
-import { TestMode } from '../types';
+import { TestMode } from '../../types';
 
 interface ModeSelectorDockProps {
     currentMode: TestMode;

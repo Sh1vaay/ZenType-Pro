@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Command, Search } from 'lucide-react';
-import { SessionSettings, Theme, FontFamily } from '../types';
+import { SessionSettings, Theme, FontFamily } from '../../types';
 
 interface CommandPaletteProps {
     settings: SessionSettings;

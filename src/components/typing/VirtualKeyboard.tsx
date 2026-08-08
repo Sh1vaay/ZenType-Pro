@@ -1,5 +1,5 @@
 import React from 'react';
-import { StageType, Layout, KeyboardThemeVariant } from '../types';
+import { StageType, Layout, KeyboardThemeVariant } from '../../types';
 import HandGuide from './HandGuide';
 
 interface VirtualKeyboardProps {

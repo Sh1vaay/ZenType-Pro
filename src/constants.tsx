@@ -41,7 +41,6 @@ export const QUOTES: string[] = [
 ];
 
 import { Achievement } from './types';
-import { Target, Zap, Clock, Ghost, Shield, Award, Terminal, EyeOff, Skull } from 'lucide-react'; // Mock imports for icons
 
 export const ACHIEVEMENTS: Achievement[] = [
   {

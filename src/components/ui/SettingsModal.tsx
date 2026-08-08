@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Type, Music, Monitor, Keyboard, Eye, Zap, MousePointer } from 'lucide-react';
-import { SessionSettings, Theme, FontFamily, SoundPack, CaretStyle, TextDensity, KeyboardThemeVariant } from '../types';
+import { SessionSettings, Theme, FontFamily, SoundPack, CaretStyle, TextDensity, KeyboardThemeVariant } from '../../types';
 
 interface SettingsModalProps {
     isOpen: boolean;

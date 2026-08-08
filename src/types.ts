@@ -149,10 +149,3 @@ export interface InventoryItem {
   acquiredAt: number;
 }
 
-export interface ModeConfig {
-  id: TestMode;
-  name: string;
-  description: string;
-  icon: any; // Lucide icon
-  color: string;
-}

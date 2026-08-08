@@ -1,8 +1,8 @@
 
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { UserStats, KeyPerformance, StageType } from '../types';
-import VirtualKeyboard from './VirtualKeyboard';
+import { UserStats, KeyPerformance, StageType } from '../../types';
+import VirtualKeyboard from '../typing/VirtualKeyboard';
 import { TrendingUp, Target, Zap, AlertTriangle, ChevronRight, BarChart2, Activity } from 'lucide-react';
 
 interface AnalyticsDashboardProps {

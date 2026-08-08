@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { playMetronomeTick } from '../services/soundEngine';
+import { playMetronomeTick } from '../../services/soundEngine';
 
 interface MetronomeProps {
     bpm: number;

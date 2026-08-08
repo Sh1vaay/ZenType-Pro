@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { KeystrokeEvent } from '../types';
+import { KeystrokeEvent } from '../../types';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 
 interface ReplayViewerProps {

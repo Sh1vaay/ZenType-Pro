@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import VirtualKeyboard from './VirtualKeyboard';
-import { StageType, KeyPerformance, SessionSettings, KeystrokeEvent } from '../types';
+import { StageType, KeyPerformance, SessionSettings, KeystrokeEvent } from '../../types';
 import { Clock, Hash, Target, EyeOff, Ghost, Zap, RotateCcw } from 'lucide-react';
-import { playKeySound } from '../services/soundEngine';
-import InputLatencyChart from './InputLatencyChart';
+import { playKeySound } from '../../services/soundEngine';
+import InputLatencyChart from '../stats/InputLatencyChart';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TypingAreaProps {
